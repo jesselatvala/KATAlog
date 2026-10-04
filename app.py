@@ -10,10 +10,18 @@ import katas
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    token = request.form.get("csrf_token", "")
+    if not token or not secrets.compare_digest(token, session.get("csrf_token", "")):
+        abort(403)
+
 @app.route("/")
 def index():
-    katas = db.query("SELECT katas.*, users.username FROM katas JOIN users ON users.id = katas.user_id ORDER BY katas.id DESC")
-    return render_template("index.html", katas=katas)
+    return render_template("index.html", katas=katas.get_katas())
 
 @app.route("/new_kata")
 def new_kata():
@@ -33,7 +41,8 @@ def create_kata():
         return render_template("new_kata.html", title=title, description=description,
                                error="Kuvauksen pituuden tulee olla 1–500 merkkiä."), 400
     katas.add_kata(title, description, session["user_id"])
-    return redirect("/")    
+    return redirect("/")
+
 
 @app.route("/register")
 def register():
@@ -62,20 +71,24 @@ def create():
 def login():
     if request.method == "GET":
         return render_template("login.html")
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        sql = "SELECT password_hash FROM users WHERE username = ?"
-    password_hash = db.query(sql, [username])[0][0]
+    username = request.form["username"]
+    password = request.form["password"]
+    sql = "SELECT id, password_hash FROM users WHERE username = ?"
+    result = db.query(sql, [username])
+    if not result:
+        return "VIRHE: väärä tunnus tai salasana"
+    password_hash = result[0]["password_hash"]
 
     if check_password_hash(password_hash, password):
+        session.clear()
+        session["user_id"] = result[0]["id"]
         session["username"] = username
+        session["csrf_token"] = secrets.token_hex(32)
         return redirect("/")
     else:
         return "VIRHE: väärä tunnus tai salasana"
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    session.clear()
     return redirect("/")
