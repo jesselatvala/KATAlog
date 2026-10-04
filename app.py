@@ -1,4 +1,5 @@
 import sqlite3
+import secrets
 from flask import Flask
 from flask import redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -24,7 +25,9 @@ def create():
     password2 = request.form["password2"]
     if password1 != password2:
         return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
+    password_hash = generate_password_hash(
+    password1, method="pbkdf2:sha256:1000000"
+    )
 
     try:
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
