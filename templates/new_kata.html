@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <title>Lisää kata</title>
+</head>
+<body>
+  <h1>Lisää kata</h1>
+  {% if error %}<p role="alert">{{ error }}</p>{% endif %}
+  <form action="/create_kata" method="post">
+    <p>
+      <label for="title">Nimi:</label><br />
+      <input id="title" name="title" value="{{ title or '' }}" maxlength="100" required />
+    </p>
+    <p>
+      <label for="description">Kuvaus:</label><br />
+      <textarea id="description" name="description" rows="8" cols="50"
+                maxlength="2000" required>{{ description or '' }}</textarea>
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Lisää kata" />
+  </form>
+  <p><a href="/">Takaisin etusivulle</a></p>
+</body>
+</html>

@@ -15,6 +15,25 @@ def index():
     katas = db.query("SELECT katas.*, users.username FROM katas JOIN users ON users.id = katas.user_id ORDER BY katas.id DESC")
     return render_template("index.html", katas=katas)
 
+@app.route("/new_kata")
+def new_kata():
+    require_login()
+    return render_template("new_kata.html")
+
+@app.route("/create_kata", methods=["POST"])
+def create_kata():
+    require_login()
+    check_csrf()
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    if not title or len(title) > 50:
+        return render_template("new_kata.html", title=title, description=description,
+                               error="Nimen pituuden tulee olla 1–50 merkkiä."), 400
+    if not description or len(description) > 500:
+        return render_template("new_kata.html", title=title, description=description,
+                               error="Kuvauksen pituuden tulee olla 1–500 merkkiä."), 400
+    katas.add_kata(title, description, session["user_id"])
+    return redirect("/")    
 
 @app.route("/register")
 def register():
