@@ -1,17 +1,19 @@
 import sqlite3
 import secrets
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import abort, url_for, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import db
+import katas
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    katas = db.query("SELECT katas.*, users.username FROM katas JOIN users ON users.id = katas.user_id ORDER BY katas.id DESC")
+    return render_template("index.html", katas=katas)
 
 
 @app.route("/register")
