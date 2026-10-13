@@ -60,6 +60,31 @@ def require_own_kata(kata_id):
         abort(403)
     return kata
 
+@app.route("/edit_kata/<int:kata_id>", methods=["GET", "POST"])
+def edit_kata(kata_id):
+    kata = require_own_kata(kata_id)
+    if request.method == "GET":
+        return render_template("edit_kata.html", kata=kata,
+                               title=kata["title"], description=kata["description"])
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    if not title or len(title) > 50:
+        return render_template("edit_kata.html", kata=kata, title=title,
+                               description=description,
+                               error="Nimen pituuden tulee olla 1–50 merkkiä."), 400
+    if not description or len(description) > 500:
+        return render_template("edit_kata.html", kata=kata, title=title,
+                               description=description,
+                               error="Kuvauksen pituuden tulee olla 1–500 merkkiä."), 400
+    katas.update_kata(kata_id, title, description, session["user_id"])
+    return redirect(url_for("show_kata", kata_id=kata_id))
+
+@app.route("/remove_kata/<int:kata_id>", methods=["POST"])
+def remove_kata(kata_id):
+    require_own_kata(kata_id)
+    katas.remove_kata(kata_id, session["user_id"])
+    return redirect("/")
+
 @app.route("/register")
 def register():
     return render_template("register.html")

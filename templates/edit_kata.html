@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <title>Muokkaa kataa</title>
+</head>
+<body>
+  <h1>Muokkaa kataa</h1>
+  {% if error %}<p role="alert">{{ error }}</p>{% endif %}
+  <form action="{{ url_for('edit_kata', kata_id=kata.id) }}" method="post">
+    <p>
+      <label for="title">Nimi:</label><br />
+      <input id="title" name="title" value="{{ title }}" maxlength="50" required />
+    </p>
+    <p>
+      <label for="description">Kuvaus:</label><br />
+      <textarea id="description" name="description" rows="8" cols="50"
+                maxlength="500" required>{{ description }}</textarea>
+    </p>
+    <input type="submit" value="Tallenna muutokset" />
+  </form>
+  <p><a href="{{ url_for('show_kata', kata_id=kata.id) }}">Takaisin kataan</a></p>
+</body>
+</html>
