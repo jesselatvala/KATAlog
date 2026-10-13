@@ -10,12 +10,12 @@
   <form action="/create_kata" method="post">
     <p>
       <label for="title">Nimi:</label><br />
-      <input id="title" name="title" value="{{ title or '' }}" maxlength="100" required />
+      <input id="title" name="title" value="{{ title or '' }}" maxlength="50" required />
     </p>
     <p>
       <label for="description">Kuvaus:</label><br />
       <textarea id="description" name="description" rows="8" cols="50"
-                maxlength="2000" required>{{ description or '' }}</textarea>
+                maxlength="500" required>{{ description or '' }}</textarea>
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lisää kata" />

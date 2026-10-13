@@ -44,6 +44,22 @@ def create_kata():
     return redirect("/")
 
 
+@app.route("/kata/<int:kata_id>")
+def show_kata(kata_id):
+    kata = katas.get_kata(kata_id)
+    if kata is None:
+        abort(404)
+    return render_template("kata.html", kata=kata)
+
+def require_own_kata(kata_id):
+    require_login()
+    kata = katas.get_kata(kata_id)
+    if kata is None:
+        abort(404)
+    if kata["user_id"] != session["user_id"]:
+        abort(403)
+    return kata
+
 @app.route("/register")
 def register():
     return render_template("register.html")
