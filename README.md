@@ -13,16 +13,17 @@ HY TKT20019 project
 
 ## Working Functionalities
 - User can register and log in to app.
-- User can add katas with /new_kata (name length max 50 characters, describtion length max 500 characters)
+- User can add katas with /new_kata (name length max 50 characters, description length max 500 characters)
+- User can edit and remove katas with /kata
 
 ## How to Use
 - Clone the repository to your local machine by running:
 git clone https://github.com/jesselatvala/KATAlog.git
 - Navigate to the project's root directory by running:
 cd KATAlog
-- Create and activate a virtual environment by running:
+- Create and activate a virtual environment by running first:
 python3 -m venv venv
-source venv/bin/activate
+- Then: source venv/bin/activate
 - Install the dependencies:
 pip install flask
 - Initialize the database by running:
