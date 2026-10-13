@@ -5,6 +5,11 @@
   <title>Lisää kata</title>
 </head>
 <body>
+    {% if session.user_id %}
+  <p>Olet kirjautunut nimellä {{ session.username }}</p>
+  {% else %}
+  <p>Et ole kirjautunut sisään. <a href="/login">Kirjaudu sisään</a></p>
+  {% endif %}
   <h1>Lisää kata</h1>
   {% if error %}<p role="alert">{{ error }}</p>{% endif %}
   <form action="/create_kata" method="post">

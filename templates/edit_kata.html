@@ -5,6 +5,11 @@
   <title>Muokkaa kataa</title>
 </head>
 <body>
+  {% if session.user_id %}
+  <p>Olet kirjautunut nimellä {{ session.username }}</p>
+  {% else %}
+  <p>Et ole kirjautunut sisään. <a href="/login">Kirjaudu sisään</a></p>
+  {% endif %}
   <h1>Muokkaa kataa</h1>
   {% if error %}<p role="alert">{{ error }}</p>{% endif %}
   <form action="{{ url_for('edit_kata', kata_id=kata.id) }}" method="post">

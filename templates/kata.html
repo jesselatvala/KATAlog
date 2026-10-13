@@ -5,6 +5,11 @@
   <title>{{ kata.title }} – KATAlog</title>
 </head>
 <body>
+    {% if session.user_id %}
+  <p>Olet kirjautunut nimellä {{ session.username }}</p>
+  {% else %}
+  <p>Et ole kirjautunut sisään. <a href="/login">Kirjaudu sisään</a></p>
+  {% endif %}
   <h1>{{ kata.title }}</h1>
   <p style="white-space: pre-wrap">{{ kata.description }}</p>
   <p>Lisääjä: {{ kata.username }}</p>

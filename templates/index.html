@@ -4,25 +4,41 @@
   <meta charset="utf-8" />
   <title>KATAlog</title>
 </head>
-
 <body>
   <h1>KATAlog</h1>
+  <p><b>Tervetuloa</b> <i>KATAlogiin</i>!</p>
+
+  {% if session.user_id %}
+  <p>Olet kirjautunut nimellä {{ session.username }}</p>
+  <p><a href="/logout">Kirjaudu ulos</a></p>
+  <form action="/new_kata" method="get">
+    <button type="submit">Lisää kata</button>
+  </form>
+  {% else %}
   <p>
-    <b>Tervetuloa</b> <i>KATAlogiin</i>!
+    <a href="/login">Kirjaudu sisään</a>
+    <a href="/register">Luo tunnus</a>
   </p>
+  {% endif %}
 
-   {% if session.username %}
-
-    <p>Olet kirjautunut nimellä {{ session.username }}</p>
-
-    {% endif %}
-
-    <p>
-      <a href="/login">Kirjaudu sisään</a>
-
-      <a href="/register">Luo tunnus</a>
-
-      <a href="/logout">Kirjaudu ulos</a>
-    </p>
-  </body>
+  <h2>Kaikki katat</h2>
+  <ul>
+    {% for kata in katas %}
+    <li>
+      <a href="{{ url_for('show_kata', kata_id=kata.id) }}">{{ kata.title }}</a>
+      (lisääjä: {{ kata.username }})
+      {% if session.user_id == kata.user_id %}
+      <form action="{{ url_for('edit_kata', kata_id=kata.id) }}" method="get">
+        <button type="submit">Muokkaa kataa</button>
+      </form>
+      <form action="{{ url_for('remove_kata', kata_id=kata.id) }}" method="post">
+        <button type="submit">Poista kata</button>
+      </form>
+      {% endif %}
+    </li>
+    {% else %}
+    <li>Katoja ei ole vielä lisätty.</li>
+    {% endfor %}
+  </ul>
+</body>
 </html>
