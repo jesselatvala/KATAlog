@@ -23,22 +23,25 @@
 
   <h2>Kaikki katat</h2>
   <ul>
-    {% for kata in katas %}
-    <li>
-      <a href="{{ url_for('show_kata', kata_id=kata.id) }}">{{ kata.title }}</a>
-      (lisääjä: {{ kata.username }})
-      {% if session.user_id == kata.user_id %}
-      <form action="{{ url_for('edit_kata', kata_id=kata.id) }}" method="get">
-        <button type="submit">Muokkaa kataa</button>
-      </form>
-      <form action="{{ url_for('remove_kata', kata_id=kata.id) }}" method="post">
-        <button type="submit">Poista kata</button>
-      </form>
-      {% endif %}
-    </li>
-    {% else %}
-    <li>Katoja ei ole vielä lisätty.</li>
-    {% endfor %}
-  </ul>
+  {% for kata in katas %}
+  <li>
+    <a href="{{ url_for('show_kata', kata_id=kata.id) }}">{{ kata.title }}</a>
+    (lisääjä: {{ kata.username }})
+
+    {% if session.get('user_id') is not none
+          and kata.user_id is defined
+          and session.get('user_id') == kata.user_id %}
+    <form action="{{ url_for('edit_kata', kata_id=kata.id) }}" method="get">
+      <button type="submit">Muokkaa kataa</button>
+    </form>
+    <form action="{{ url_for('remove_kata', kata_id=kata.id) }}" method="post">
+      <button type="submit">Poista kata</button>
+    </form>
+    {% endif %}
+  </li>
+  {% else %}
+  <li>Katoja ei ole vielä lisätty.</li>
+  {% endfor %}
+</ul>
 </body>
 </html>
