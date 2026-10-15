@@ -1,7 +1,7 @@
 import sqlite3
 import secrets
 from flask import Flask
-from flask import abort, url_for, redirect, render_template, request, session
+from flask import abort, flash, url_for, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import db
@@ -34,13 +34,18 @@ def create_kata():
     check_csrf()
     title = request.form.get("title", "").strip()
     description = request.form.get("description", "").strip()
+    developer = request.form.get("developer", "").strip()
+    style = request.form.get("style", "").strip()
+    techniques = request.form.get("techniques", "").strip()
     if not title or len(title) > 50:
         return render_template("new_kata.html", title=title, description=description,
+                               developer=developer, style=style, techniques=techniques,
                                error="Nimen pituuden tulee olla 1–50 merkkiä."), 400
     if not description or len(description) > 500:
         return render_template("new_kata.html", title=title, description=description,
+                               developer=developer, style=style, techniques=techniques,
                                error="Kuvauksen pituuden tulee olla 1–500 merkkiä."), 400
-    katas.add_kata(title, description, session["user_id"])
+    katas.add_kata(title, description, session["user_id"], developer, style, techniques)
     return redirect("/")
 
 
@@ -65,18 +70,26 @@ def edit_kata(kata_id):
     kata = require_own_kata(kata_id)
     if request.method == "GET":
         return render_template("edit_kata.html", kata=kata,
-                               title=kata["title"], description=kata["description"])
+                               title=kata["title"], description=kata["description"],
+                               developer=kata["developer"], style=kata["style"],
+                               techniques=kata["techniques"])
     title = request.form.get("title", "").strip()
     description = request.form.get("description", "").strip()
+    developer = request.form.get("developer", "").strip()
+    style = request.form.get("style", "").strip()
+    techniques = request.form.get("techniques", "").strip()
     if not title or len(title) > 50:
         return render_template("edit_kata.html", kata=kata, title=title,
                                description=description,
+                               developer=developer, style=style, techniques=techniques,
                                error="Nimen pituuden tulee olla 1–50 merkkiä."), 400
     if not description or len(description) > 500:
         return render_template("edit_kata.html", kata=kata, title=title,
                                description=description,
+                               developer=developer, style=style, techniques=techniques,
                                error="Kuvauksen pituuden tulee olla 1–500 merkkiä."), 400
-    katas.update_kata(kata_id, title, description, session["user_id"])
+    katas.update_kata(kata_id, title, description, session["user_id"],
+                      developer, style, techniques)
     return redirect(url_for("show_kata", kata_id=kata_id))
 
 @app.route("/remove_kata/<int:kata_id>", methods=["POST"])
@@ -106,7 +119,8 @@ def create():
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
 
-    return "Tunnus luotu"
+    flash("Tunnus luotu. Voit nyt kirjautua sisään.")
+    return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

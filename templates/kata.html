@@ -12,6 +12,12 @@
   {% endif %}
   <h1>{{ kata.title }}</h1>
   <p style="white-space: pre-wrap">{{ kata.description }}</p>
+  {% if kata.developer %}<p>Katan kehittäjä: {{ kata.developer }}</p>{% endif %}
+  {% if kata.style %}<p>Tyylisuunta: {{ kata.style }}</p>{% endif %}
+  {% if kata.techniques %}
+  <h2>Tekniikkalista</h2>
+  <p style="white-space: pre-wrap">{{ kata.techniques }}</p>
+  {% endif %}
   <p>Lisääjä: {{ kata.username }}</p>
   {% if session.user_id == kata.user_id %}
   <p><a href="{{ url_for('edit_kata', kata_id=kata.id) }}">Muokkaa kataa</a></p>
