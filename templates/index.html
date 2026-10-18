@@ -20,11 +20,13 @@
     <a href="/register">Luo tunnus</a>
   </p>
   {% endif %}
+  {% if session.get('user_id') %}
   <p>
-  <a href="{{ url_for('show_user', user_id=session.user_id) }}">
-    Oma käyttäjäsivu
-  </a>
-</p>
+    <a href="{{ url_for('show_user', user_id=session.user_id) }}">
+      Oma käyttäjäsivu
+    </a>
+  </p>
+{% endif %}
   <form action="/" method="get">
     <p>
       <label for="query">Hae katan nimellä tai kuvauksella:</label><br />
