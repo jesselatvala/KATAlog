@@ -28,7 +28,15 @@
     </p>
     <p>
       <label for="style">Tyylisuunta:</label><br />
-      <input id="style" name="style" value="{{ style or '' }}" />
+      <select id="style" name="style">
+        <option value="Shotokan" {% if style == "Shotokan" %}selected{% endif %}>Shotokan</option>
+        <option value="Goju Ryu" {% if style == "Goju Ryu" %}selected{% endif %}>Goju Ryu</option>
+        <option value="Shito Ryu" {% if style == "Shito Ryu" %}selected{% endif %}>Shito Ryu</option>
+        <option value="Wado Ryu" {% if style == "Wado Ryu" %}selected{% endif %}>Wado Ryu</option>
+        <option value="Kyokushin" {% if style == "Kyokushin" %}selected{% endif %}>Kyokushin</option>
+        <option value="Shorinji Ryu" {% if style == "Shorinji Ryu" %}selected{% endif %}>Shorinji Ryu</option>
+        <option value="Muu" {% if style == "Muu" %}selected{% endif %}>Muu</option>
+      </select>
     </p>
     <p>
       <label for="techniques">Tekniikkalista (yksi tekniikka riville):</label><br />
