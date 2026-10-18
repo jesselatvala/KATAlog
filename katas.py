@@ -36,3 +36,37 @@ def update_kata(kata_id, title, description, user_id, developer, style, techniqu
 def remove_kata(kata_id, user_id):
     sql = "DELETE FROM katas WHERE id = ? AND user_id = ?"
     db.execute(sql, [kata_id, user_id])
+
+def get_statistics():
+    sql = "SELECT COUNT(*) AS total FROM users"
+    user_total = db.query(sql)[0]["total"]
+
+    sql = "SELECT COUNT(*) AS total FROM katas"
+    kata_total = db.query(sql)[0]["total"]
+
+    sql = """SELECT COUNT(DISTINCT LOWER(TRIM(developer))) AS total FROM katas WHERE TRIM(developer) != ''"""
+    developer_total = db.query(sql)[0]["total"]
+
+    sql = """SELECT COUNT(DISTINCT LOWER(TRIM(style))) AS total
+             FROM katas
+             WHERE TRIM(style) != ''"""
+    style_total = db.query(sql)[0]["total"]
+
+    sql = "SELECT techniques FROM katas"
+    all_katas = db.query(sql)
+    longest_kata = 0
+    for kata in all_katas:
+        technique_count = 0
+        for line in kata["techniques"].splitlines():
+            if line.strip():
+                technique_count += 1
+        if technique_count > longest_kata:
+            longest_kata = technique_count
+
+    return {
+        "user_total": user_total,
+        "kata_total": kata_total,
+        "developer_total": developer_total,
+        "style_total": style_total,
+        "longest_kata": longest_kata
+    }

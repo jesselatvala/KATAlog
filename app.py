@@ -23,11 +23,12 @@ def check_csrf():
 @app.route("/")
 def index():
     query = request.args.get("query", "").strip()
-
+    statistics = katas.get_statistics()
     return render_template(
         "index.html",
-        katas=katas.get_katas(query),
-        query=query
+        katas = katas.get_katas(query),
+        query = query,
+        statistics = statistics
     )
 
 @app.route("/new_kata")

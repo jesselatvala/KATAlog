@@ -7,7 +7,26 @@
 <body>
   <h1>KATAlog</h1>
   <p><b>Tervetuloa</b> <i>KATAlogiin</i>!</p>
-
+  <table>
+  <thead>
+    <tr>
+      <th scope="col">Käyttäjiä</th>
+      <th scope="col">Katoja</th>
+      <th scope="col">Kehittäjiä</th>
+      <th scope="col">Tyylisuuntia</th>
+      <th scope="col">Pisin kata</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ statistics.user_total }}</td>
+      <td>{{ statistics.kata_total }}</td>
+      <td>{{ statistics.developer_total }}</td>
+      <td>{{ statistics.style_total }}</td>
+      <td>{{ statistics.longest_kata }}</td>
+    </tr>
+  </tbody>
+</table>
   {% if session.user_id %}
   <p>Olet kirjautunut nimellä {{ session.username }}</p>
   <p><a href="/logout">Kirjaudu ulos</a></p>
