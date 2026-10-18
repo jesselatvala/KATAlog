@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <title>Käyttäjä {{ user.username }} – KATAlog</title>
+</head>
+<body>
+  <h1>Käyttäjä {{ user.username }}</h1>
+  <p>Käyttäjän lisäämiä katoja: {{ katas | count }}</p>
+  <h2>Käyttäjän katat</h2>
+  <ul>
+    {% for kata in katas %}
+    <li>
+      <a href="{{ url_for('show_kata', kata_id=kata.id) }}">
+        {{ kata.title }}
+      </a>
+    </li>
+    {% else %}
+    <li>Käyttäjä ei ole vielä lisännyt katoja.</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/">Takaisin etusivulle</a></p>
+</body>
+</html>

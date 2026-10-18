@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import db
 import katas
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -61,6 +62,14 @@ def show_kata(kata_id):
     if kata is None:
         abort(404)
     return render_template("kata.html", kata=kata)
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if user is None:
+        abort(404)
+    user_katas = users.get_katas(user_id)
+    return render_template("user.html", user=user, katas=user_katas)
 
 def require_own_kata(kata_id):
     require_login()
