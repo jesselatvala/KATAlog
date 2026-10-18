@@ -1,6 +1,13 @@
 import db
 
-def get_katas():
+def get_katas(query=""):
+    if query:
+        sql = """SELECT katas.id, katas.title, users.username
+                 FROM katas JOIN users ON katas.user_id = users.id
+                 WHERE katas.title LIKE ? OR katas.description LIKE ?
+                 ORDER BY katas.id DESC"""
+        search = "%" + query + "%"
+        return db.query(sql, [search, search])
     sql = """SELECT katas.id, katas.title, users.username
              FROM katas JOIN users ON katas.user_id = users.id
              ORDER BY katas.id DESC"""

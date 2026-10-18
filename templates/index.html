@@ -20,8 +20,22 @@
     <a href="/register">Luo tunnus</a>
   </p>
   {% endif %}
-
+  <form action="/" method="get">
+    <p>
+      <label for="query">Hae katan nimellä tai kuvauksella:</label><br />
+      <input type="text" id="query" name="query" value="{{ query }}" />
+      <button type="submit">Hae</button>
+      <a href="/">Näytä kaikki</a>
+    </p>
+  </form>
+  {% if query %}
+  <h2>Hakutulokset: {{ query }}</h2>
+  {% if not katas %}
+  <p>Hakua vastaavia katoja ei löytynyt.</p>
+  {% endif %}
+  {% else %}
   <h2>Kaikki katat</h2>
+  {% endif %}
   <ul>
   {% for kata in katas %}
   <li>
